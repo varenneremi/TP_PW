@@ -14,13 +14,13 @@
     <h2 id = "No Results">
       No Results
     </h2>
-    <ion-item *ngFor="let item of results">
+    <ion-item *ngFor="let item of results | async">
       <ion-thumbnail item-start>
-        <img src="{{item.image}}">
+        <img [src]="'https://image.tmdb.org/t/p/w90'+item.poster_path">
       </ion-thumbnail>
       <h2> {{item.title}} </h2>
-      <p> {{item.author}} </p>
-      <p> {{item.date}} </p>
+      <p> {{item.id}} </p>
+      <p> {{item.release_date}} </p>
       <button ion-button clear item-end [navPush]="pushPage" [navParams]="item"> details </button>
     </ion-item>
   </ion-list>

@@ -13,17 +13,20 @@ import {DetailsPage } from '../pages/details/details';
   declarations: [
     MyApp,
     HomePage, 
-    DetailsPage
+    DetailsPage,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpClientModule
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage, 
-    DetailsPage
+    DetailsPage, 
+    
   ],
   providers: [
     StatusBar,

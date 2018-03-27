@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { NgIf } from '@angular/common';
 import { DetailsPage } from '../details/details';
+import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { APIkey } from '../../app/tmdb'
+import { AsyncPipe } from '@angular/common';
+
 
 
 @Component({
@@ -9,28 +14,39 @@ import { DetailsPage } from '../details/details';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  
-  results: Result[];
   pushPage: any;
-
-  constructor(public navCtrl: NavController) {
-    this.pushPage = DetailsPage;
+  results:  Observable <Result[]>
   
+
+  constructor(public http : HttpClient) {
+    this.pushPage = DetailsPage;
+    this.results = Observable.of([]);
   //this.results = tabresults;
 
   }
 
-  getResults(ev: any) {
-    this.results = [];
+  fetchResults(query:string): Observable<Result[]> {
+    let url : string = 'https://api.themoviedb.org/3/search/movie'
+    return this.http.get(url,
+    {
+      params:
+      { 
+        query: query,
+        api_key : APIkey
+      }
+    }).pluck('results');
+  }
 
+  getResults(ev: any) {
+    this.results = Observable.of([]);
     let val = ev.target.value;
 
     if(val != '') {
-      this.results = tabresults;
+      this.results = this.fetchResults(val) ;
       document.getElementById("No Results").style.display="none";
     }
     else {
-      this.results = [];
+      this.results = Observable.of([]);
       document.getElementById("No Results").style.display="block";
     }
   }
@@ -38,28 +54,28 @@ export class HomePage {
 
 export interface Result {
   title:string;
-  author:string;
-  date:string;
-  image:string;
+  id:number;
+  release_date:string;
+  poster_path:string;
 }
 
 const tabresults: Result[] = [
   {
     title: 'Star Wars IV: La guerre des étoiles', 
-    author: 'George Lucas',
-    date: '25 Mai 1977',
-    image: 'https://vignette.wikia.nocookie.net/fr.starwars/images/4/43/La_guerre_des_%C3%A9toiles_%28Roman%29.jpg/revision/latest?cb=20110315235125' 
+    id : 4,
+    release_date: '25 Mai 1977',
+    poster_path: 'https://vignette.wikia.nocookie.net/fr.starwars/images/4/43/La_guerre_des_%C3%A9toiles_%28Roman%29.jpg/revision/latest?cb=20110315235125' 
   },
   
   {title: 'Star Wars V: L empire contre-attaque',
-   author: 'George Lucas',
-   date: '20 Mai 1980',
-   image: 'https://media.senscritique.com/media/000016185716/source_big/L_Empire_contre_attaque.png'
+   id: 5,
+   release_date: '20 Mai 1980',
+   poster_path: 'https://media.senscritique.com/media/000016185716/source_big/L_Empire_contre_attaque.png'
   },
 
   {title: 'Star Wars VI: Le retour du Jedi',
-  author: 'George Lucas',
-  date: '27 Mai 1983',
-  image: 'http://is3.mzstatic.com/image/thumb/Video3/v4/a5/16/13/a51613fb-0e6e-864f-d8a4-48b1dbaa00ea/source/1200x630bb.jpg'
+  id: 6,
+  release_date: '27 Mai 1983',
+  poster_path: 'http://is3.mzstatic.com/image/thumb/Video3/v4/a5/16/13/a51613fb-0e6e-864f-d8a4-48b1dbaa00ea/source/1200x630bb.jpg'
 }
 ];

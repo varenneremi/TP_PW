@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { NgIf } from '@angular/common';
+import { DetailsPage } from '../details/details';
+
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-
+  
   results: Result[];
+  pushPage: any;
 
   constructor(public navCtrl: NavController) {
+    this.pushPage = DetailsPage;
   
   //this.results = tabresults;
 
@@ -22,16 +27,19 @@ export class HomePage {
 
     if(val != '') {
       this.results = tabresults;
+      document.getElementById("No Results").style.display="none";
     }
     else {
       this.results = [];
+      document.getElementById("No Results").style.display="block";
     }
   }
 }
+
 export interface Result {
   title:string;
   author:string;
-  date:object;
+  date:string;
   image:string;
 }
 
@@ -48,6 +56,7 @@ const tabresults: Result[] = [
    date: '20 Mai 1980',
    image: 'https://media.senscritique.com/media/000016185716/source_big/L_Empire_contre_attaque.png'
   },
+
   {title: 'Star Wars VI: Le retour du Jedi',
   author: 'George Lucas',
   date: '27 Mai 1983',

@@ -11,6 +11,9 @@
 
 <ion-content padding>
   <ion-list>
+    <h2 id = "No Results">
+      No Results
+    </h2>
     <ion-item *ngFor="let item of results">
       <ion-thumbnail item-start>
         <img src="{{item.image}}">
@@ -18,7 +21,7 @@
       <h2> {{item.title}} </h2>
       <p> {{item.author}} </p>
       <p> {{item.date}} </p>
-      <button ion-button clear item-end>View</button>
+      <button ion-button clear item-end [navPush]="pushPage" [navParams]="item"> details </button>
     </ion-item>
   </ion-list>
   

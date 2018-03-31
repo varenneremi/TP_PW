@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { APIkey } from '../../app/tmdb'
 import { AsyncPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -57,8 +58,12 @@ export interface Result {
   id:number;
   release_date:string;
   poster_path:string;
-}
+  original_title:string;
+  original_language:string;
+  popularity:number;
 
+}
+/*
 const tabresults: Result[] = [
   {
     title: 'Star Wars IV: La guerre des étoiles', 
@@ -79,3 +84,4 @@ const tabresults: Result[] = [
   poster_path: 'http://is3.mzstatic.com/image/thumb/Video3/v4/a5/16/13/a51613fb-0e6e-864f-d8a4-48b1dbaa00ea/source/1200x630bb.jpg'
 }
 ];
+*/

@@ -7,6 +7,10 @@ import { HttpClient } from '@angular/common/http';
 import { APIkey } from '../../app/tmdb'
 import { AsyncPipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
+import { AlertController } from 'ionic-angular';
+import { Subscription } from 'rxjs/Subscription';
+import { Platform } from 'ionic-angular';
+import { Shake } from '@ionic-native/shake';
 
 
 
@@ -16,15 +20,29 @@ import { DatePipe } from '@angular/common';
 })
 export class HomePage {
   pushPage: any;
-  results:  Observable <Result[]>
-  
+  results:  Observable <Result[]>;
+  shakeSubscription: Subscription;
+  //platform: Platform;
+  //shake: Shake;
 
-  constructor(public http : HttpClient) {
+  constructor(public http : HttpClient, public alertCtrl: AlertController, public navCtrl: NavController, public platform: Platform, 
+    public shake: Shake) {
     this.pushPage = DetailsPage;
     this.results = Observable.of([]);
+   
   //this.results = tabresults;
-
   }
+
+  ionViewDidEnter() {
+    this.shakeSubscription = Observable.fromPromise(this.platform.ready())  
+      .switchMap(() => this.shake.startWatch())
+      .switchMap(() => this.discoverMovies())        
+      .subscribe(movies => this.showRandomMovieAlert(movies));
+  }
+  ionViewWillLeave() {
+    this.shakeSubscription.unsubscribe();
+  }
+
 
   fetchResults(query:string): Observable<Result[]> {
     let url : string = 'https://api.themoviedb.org/3/search/movie'
@@ -36,6 +54,39 @@ export class HomePage {
         api_key : APIkey
       }
     }).pluck('results');
+  }
+
+  private discoverMovies(): Observable<Result[]> {
+    let url : string = 'https://developers.themoviedb.org/3/discover/movie'
+    return this.http.get(url,
+      {
+        params:
+        { 
+          api_key : APIkey,
+          primary_release_date : '2018'
+        }
+      }).pluck('results');
+  }
+
+  private showRandomMovieAlert(results: Result[]):void {
+    var film = results[Math.floor(Math.random()*results.length)];
+    let confirm = this.alertCtrl.create({
+      title: film.title,
+      message: film.overview,
+      buttons: [
+        {
+          text: 'Cancel',
+          
+        },
+        {
+          text: 'Details',
+          handler: () => {
+            this.navCtrl.push(this.pushPage, film);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   getResults(ev: any) {
@@ -55,7 +106,7 @@ export class HomePage {
 
 export interface Result {
   title:string;
-  id:number;
+  overview:string;
   release_date:string;
   poster_path:string;
   original_title:string;

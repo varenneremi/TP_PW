@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {DetailsPage } from '../pages/details/details';
+import { Shake } from '@ionic-native/shake';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {DetailsPage } from '../pages/details/details';
   providers: [
     StatusBar,
     SplashScreen,
+    Shake,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
